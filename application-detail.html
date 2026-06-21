@@ -1,0 +1,219 @@
+<!-- src/main/resources/templates/admin/application-detail.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Details - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar" style="background: var(--primary); color: white;">
+            <div class="container">
+                <a href="/admin/dashboard" class="navbar-brand" style="color: white;">
+                    🏛️ Net Center Admin
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="/admin/dashboard" class="nav-link" style="color: rgba(255,255,255,0.9);">Dashboard</a></li>
+                    <li><a href="/admin/applications" class="nav-link" style="color: rgba(255,255,255,0.9);">Applications</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-sm" 
+                                    style="background: rgba(255,255,255,0.2); color: white;">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main style="padding: 2rem 0; flex: 1;">
+            <div class="container" style="max-width: 900px;">
+                <a href="/admin/applications" class="btn btn-outline btn-sm mb-3">
+                    ← Back to Applications
+                </a>
+
+                <!-- Application Header -->
+                <div class="card mb-3">
+                    <div class="card-header flex items-center justify-between">
+                        <div>
+                            <h2 th:text="${application.applicationId}">Application ID</h2>
+                            <p style="color: var(--text-secondary);" 
+                               th:text="${application.serviceType.name}">Service Type</p>
+                        </div>
+                        <span class="badge" 
+                              th:classappend="'badge-' + ${application.status.name().toLowerCase().replace('_', '-')}"
+                              th:text="${application.status}">STATUS</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <strong>Applicant:</strong>
+                                <p th:text="${application.user.fullName}">Name</p>
+                            </div>
+                            <div>
+                                <strong>Email:</strong>
+                                <p th:text="${application.user.email}">email@example.com</p>
+                            </div>
+                            <div>
+                                <strong>Submitted:</strong>
+                                <p th:text="${#temporals.format(application.submittedAt, 'dd MMM yyyy HH:mm')}">Date</p>
+                            </div>
+                            <div th:if="${application.processedAt}">
+                                <strong>Processed:</strong>
+                                <p th:text="${#temporals.format(application.processedAt, 'dd MMM yyyy HH:mm')}">Date</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3>Uploaded Documents</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${application.documents.empty}">
+                            <p style="color: var(--text-secondary);">No documents uploaded</p>
+                        </div>
+                        <div th:unless="${application.documents.empty}">
+                            <div th:each="doc : ${application.documents}" class="file-item">
+                                <div class="flex items-center gap-2">
+                                    <span>📄</span>
+                                    <div>
+                                        <strong th:text="${doc.documentType}">Document Type</strong>
+                                        <p style="color: var(--text-secondary); font-size: 0.875rem;" 
+                                           th:text="${doc.fileName}">filename.pdf</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span th:if="${doc.isVerified}" class="badge badge-approved">Verified</span>
+                                    <span th:unless="${doc.isVerified}" class="badge badge-pending">Pending</span>
+                                    <a th:href="@{'/api/documents/' + ${doc.id} + '/download'}" 
+                                       class="btn btn-sm btn-outline" download>
+                                        📥 Download
+                                    </a>
+                                    <button th:unless="${doc.isVerified}" 
+                                            th:onclick="'verifyDocument(' + ${doc.id} + ')'"
+                                            class="btn btn-sm btn-primary">
+                                        ✓ Verify
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Status -->
+                <div class="card" th:if="${application.status.name() != 'APPROVED' and application.status.name() != 'REJECTED'}">
+                    <div class="card-header">
+                        <h3>Update Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="statusForm">
+                            <div class="form-group">
+                                <label class="form-label">New Status</label>
+                                <select id="newStatus" class="form-control" required>
+                                    <option value="">Select Status</option>
+                                    <option value="UNDER_REVIEW">Under Review</option>
+                                    <option value="APPROVED">Approved</option>
+                                    <option value="REJECTED">Rejected</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Remarks</label>
+                                <textarea id="remarks" class="form-control" rows="3" 
+                                          placeholder="Add any remarks or notes"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Current Remarks -->
+                <div class="card mt-3" th:if="${application.remarks}">
+                    <div class="card-header">
+                        <h3>Current Remarks</h3>
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${application.remarks}">Remarks text</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding-top: 0;">
+                    <p>&copy; 2024 Net Center Admin Panel</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script th:inline="javascript">
+        const applicationId = [[${application.applicationId}]];
+
+        document.getElementById('statusForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const status = document.getElementById('newStatus').value;
+            const remarks = document.getElementById('remarks').value;
+            
+            if (!status) {
+                alert('Please select a status');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/admin/api/applications/${applicationId}/status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status, remarks })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Status updated successfully');
+                    location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        async function verifyDocument(docId) {
+            try {
+                const response = await fetch(`/admin/api/documents/${docId}/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ verified: true })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

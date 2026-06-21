@@ -1,0 +1,223 @@
+<!-- src/main/resources/templates/track.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Application - Net Center</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    🏛️ Net Center
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/services" class="nav-link">Services</a></li>
+                    <li><a href="/track" class="nav-link">Track</a></li>
+                    <li><a href="/login" class="btn btn-outline btn-sm">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main style="padding: 2rem 0; flex: 1;">
+            <div class="container" style="max-width: 800px;">
+                <!-- Search Card -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h2 class="mb-2">Track Your Application</h2>
+                        <p style="color: var(--text-secondary);" class="mb-3">
+                            Enter your application ID to check the current status
+                        </p>
+                        <form id="trackForm" class="flex gap-2">
+                            <input type="text" id="applicationId" class="form-control" 
+                                   placeholder="Enter Application ID (e.g., PAN20240101234)" 
+                                   style="flex: 1;" required>
+                            <button type="submit" class="btn btn-primary">
+                                🔍 Track
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Results Card -->
+                <div id="resultsCard" class="card hidden">
+                    <div class="card-header flex items-center justify-between">
+                        <div>
+                            <h3>Application Status</h3>
+                            <p id="appIdDisplay" style="color: var(--text-secondary);"></p>
+                        </div>
+                        <span id="statusBadge" class="badge"></span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Timeline -->
+                        <div class="timeline">
+                            <div class="timeline-item" id="step1">
+                                <strong>Application Submitted</strong>
+                                <p id="submittedDate" style="color: var(--text-secondary);"></p>
+                            </div>
+                            <div class="timeline-item" id="step2">
+                                <strong>Under Review</strong>
+                                <p style="color: var(--text-secondary);">Your documents are being verified</p>
+                            </div>
+                            <div class="timeline-item" id="step3">
+                                <strong>Processing</strong>
+                                <p style="color: var(--text-secondary);">Application is being processed</p>
+                            </div>
+                            <div class="timeline-item" id="step4">
+                                <strong>Completed</strong>
+                                <p id="processedDate" style="color: var(--text-secondary);"></p>
+                            </div>
+                        </div>
+
+                        <!-- Remarks -->
+                        <div id="remarksSection" class="alert alert-info mt-3 hidden">
+                            <strong>Remarks:</strong>
+                            <p id="remarksText"></p>
+                        </div>
+
+                        <!-- Application Details -->
+                        <div class="mt-3">
+                            <h4>Application Details</h4>
+                            <table class="table">
+                                <tr>
+                                    <td style="font-weight: 500;">Service Type</td>
+                                    <td id="serviceType"></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 500;">Submitted On</td>
+                                    <td id="submittedOn"></td>
+                                </tr>
+                                <tr id="processedRow" class="hidden">
+                                    <td style="font-weight: 500;">Processed On</td>
+                                    <td id="processedOn"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a id="downloadReceipt" href="#" class="btn btn-outline" download>
+                            📥 Download Receipt
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Error Card -->
+                <div id="errorCard" class="card hidden">
+                    <div class="card-body text-center">
+                        <div style="font-size: 4rem;">😕</div>
+                        <h3 class="mt-2">Application Not Found</h3>
+                        <p style="color: var(--text-secondary);">
+                            Please check the application ID and try again.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding-top: 0;">
+                    <p>&copy; 2024 Net Center. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('trackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const applicationId = document.getElementById('applicationId').value.trim();
+            
+            try {
+                const response = await fetch(`/api/track/${applicationId}`);
+                const result = await response.json();
+                
+                document.getElementById('errorCard').classList.add('hidden');
+                document.getElementById('resultsCard').classList.add('hidden');
+                
+                if (result.success) {
+                    displayResults(result.data);
+                } else {
+                    document.getElementById('errorCard').classList.remove('hidden');
+                }
+            } catch (error) {
+                document.getElementById('errorCard').classList.remove('hidden');
+            }
+        });
+
+        function displayResults(data) {
+            document.getElementById('resultsCard').classList.remove('hidden');
+            
+            // Application ID
+            document.getElementById('appIdDisplay').textContent = data.applicationId;
+            
+            // Status Badge
+            const badge = document.getElementById('statusBadge');
+            badge.textContent = data.status.replace('_', ' ');
+            badge.className = 'badge badge-' + data.status.toLowerCase().replace('_', '-');
+            
+            // Service Type
+            document.getElementById('serviceType').textContent = data.serviceName;
+            
+            // Dates
+            document.getElementById('submittedOn').textContent = formatDate(data.submittedAt);
+            document.getElementById('submittedDate').textContent = formatDate(data.submittedAt);
+            
+            if (data.processedAt) {
+                document.getElementById('processedRow').classList.remove('hidden');
+                document.getElementById('processedOn').textContent = formatDate(data.processedAt);
+                document.getElementById('processedDate').textContent = formatDate(data.processedAt);
+            }
+            
+            // Remarks
+            if (data.remarks) {
+                document.getElementById('remarksSection').classList.remove('hidden');
+                document.getElementById('remarksText').textContent = data.remarks;
+            } else {
+                document.getElementById('remarksSection').classList.add('hidden');
+            }
+            
+            // Timeline
+            updateTimeline(data.status);
+            
+            // Download link
+            document.getElementById('downloadReceipt').href = `/api/applications/${data.applicationId}/receipt`;
+        }
+
+        function updateTimeline(status) {
+            const steps = ['step1', 'step2', 'step3', 'step4'];
+            steps.forEach(step => document.getElementById(step).classList.remove('completed'));
+            
+            document.getElementById('step1').classList.add('completed');
+            
+            if (status === 'UNDER_REVIEW' || status === 'APPROVED' || status === 'REJECTED') {
+                document.getElementById('step2').classList.add('completed');
+            }
+            if (status === 'APPROVED' || status === 'REJECTED') {
+                document.getElementById('step3').classList.add('completed');
+                document.getElementById('step4').classList.add('completed');
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>

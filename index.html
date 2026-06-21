@@ -1,0 +1,146 @@
+<!-- src/main/resources/templates/index.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Center - Government Services Portal</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    🏛️ Net Center
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/services" class="nav-link">Services</a></li>
+                    <li><a href="/track" class="nav-link">Track Application</a></li>
+                    <li><a href="/login" class="btn btn-outline btn-sm">Login</a></li>
+                    <li><a href="/register" class="btn btn-primary btn-sm">Register</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Government Services at Your Fingertips</h1>
+                <p>Apply for PAN Card, Aadhaar, Voter ID, Passport, and more from the comfort of your home. Fast, secure, and hassle-free.</p>
+                <div class="flex items-center justify-center gap-2">
+                    <a href="/register" class="btn btn-lg" style="background: white; color: var(--primary);">Get Started</a>
+                    <a href="/track" class="btn btn-lg btn-outline" style="border-color: white; color: white;">Track Application</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section style="padding: 4rem 0;">
+            <div class="container">
+                <h2 class="text-center mb-4">Our Services</h2>
+                <div class="grid grid-cols-3">
+                    <div class="card service-card">
+                        <div class="service-icon">🪪</div>
+                        <h3>PAN Card</h3>
+                        <p>Apply for new PAN card or make corrections to existing one</p>
+                        <a href="/apply/PAN" class="btn btn-primary btn-sm">Apply Now</a>
+                    </div>
+                    <div class="card service-card">
+                        <div class="service-icon">🆔</div>
+                        <h3>Aadhaar Update</h3>
+                        <p>Update your address, mobile number, or other details</p>
+                        <a href="/apply/AADHAAR" class="btn btn-primary btn-sm">Apply Now</a>
+                    </div>
+                    <div class="card service-card">
+                        <div class="service-icon">🗳️</div>
+                        <h3>Voter ID</h3>
+                        <p>Register for new Voter ID card</p>
+                        <a href="/apply/VOTER" class="btn btn-primary btn-sm">Apply Now</a>
+                    </div>
+                    <div class="card service-card">
+                        <div class="service-icon">🛂</div>
+                        <h3>Passport</h3>
+                        <p>Apply for new passport or renewal</p>
+                        <a href="/apply/PASSPORT" class="btn btn-primary btn-sm">Apply Now</a>
+                    </div>
+                    <div class="card service-card">
+                        <div class="service-icon">📜</div>
+                        <h3>Birth Certificate</h3>
+                        <p>Apply for birth certificate</p>
+                        <a href="/apply/BIRTH_CERT" class="btn btn-primary btn-sm">Apply Now</a>
+                    </div>
+                    <div class="card service-card">
+                        <div class="service-icon">💰</div>
+                        <h3>Income Certificate</h3>
+                        <p>Apply for income certificate</p>
+                        <a href="/apply/INCOME_CERT" class="btn btn-primary btn-sm">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section style="padding: 4rem 0; background: white;">
+            <div class="container">
+                <h2 class="text-center mb-4">How It Works</h2>
+                <div class="grid grid-cols-4">
+                    <div class="text-center">
+                        <div class="service-icon" style="background: var(--success);">1</div>
+                        <h4>Register</h4>
+                        <p style="color: var(--text-secondary);">Create your account with basic details</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="service-icon" style="background: var(--warning);">2</div>
+                        <h4>Choose Service</h4>
+                        <p style="color: var(--text-secondary);">Select the service you need</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="service-icon" style="background: var(--primary-light);">3</div>
+                        <h4>Submit Application</h4>
+                        <p style="color: var(--text-secondary);">Fill the form and upload documents</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="service-icon" style="background: var(--primary);">4</div>
+                        <h4>Track Status</h4>
+                        <p style="color: var(--text-secondary);">Monitor your application in real-time</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Net Center</h4>
+                        <p style="color: rgba(255,255,255,0.7);">Your one-stop solution for all government services.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="/services">Services</a></li>
+                            <li><a href="/track">Track Application</a></li>
+                            <li><a href="/faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <ul>
+                            <li><a href="mailto:support@netcenter.gov.in">support@netcenter.gov.in</a></li>
+                            <li><a href="tel:1800-XXX-XXXX">1800-XXX-XXXX</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Net Center. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

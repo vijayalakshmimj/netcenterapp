@@ -1,0 +1,279 @@
+<!-- src/main/resources/templates/apply.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Apply for ' + ${service.name} + ' - Net Center'">Apply - Net Center</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    🏛️ Net Center
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                    <li><a href="/services" class="nav-link">Services</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-outline btn-sm">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main style="padding: 2rem 0; flex: 1;">
+            <div class="container" style="max-width: 800px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 th:text="'Apply for ' + ${service.name}">Apply for Service</h2>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;" 
+                           th:text="${service.description}">Service description</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="applicationForm" enctype="multipart/form-data">
+                            <input type="hidden" id="serviceCode" th:value="${service.code}">
+                            
+                            <!-- Personal Information -->
+                            <h4 class="mb-2">Personal Information</h4>
+                            <div class="grid grid-cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name (as per documents) *</label>
+                                    <input type="text" name="fullName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Date of Birth *</label>
+                                    <input type="date" name="dob" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Gender *</label>
+                                    <select name="gender" class="form-control" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="MALE">Male</option>
+                                        <option value="FEMALE">Female</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Father's Name *</label>
+                                    <input type="text" name="fatherName" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Information -->
+                            <h4 class="mb-2 mt-3">Contact Information</h4>
+                            <div class="grid grid-cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile Number *</label>
+                                    <input type="tel" name="mobile" class="form-control" 
+                                           pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email Address *</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Address *</label>
+                                <textarea name="address" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <div class="form-group">
+                                    <label class="form-label">City *</label>
+                                    <input type="text" name="city" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">State *</label>
+                                    <input type="text" name="state" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">PIN Code *</label>
+                                    <input type="text" name="pincode" class="form-control" 
+                                           pattern="[0-9]{6}" required>
+                                </div>
+                            </div>
+
+                            <!-- Document Upload -->
+                            <h4 class="mb-2 mt-3">Upload Documents</h4>
+                            <p class="form-hint mb-2">Accepted formats: PDF, JPG, PNG (Max 10MB each)</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Identity Proof *</label>
+                                <div class="file-upload" onclick="document.getElementById('identityProof').click()">
+                                    <input type="file" id="identityProof" name="documents" 
+                                           accept=".pdf,.jpg,.jpeg,.png" required>
+                                    <p>📎 Click to upload or drag and drop</p>
+                                    <p class="form-hint">Aadhaar Card / Passport / Driving License</p>
+                                </div>
+                                <div id="identityProofFile" class="file-list"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Address Proof *</label>
+                                <div class="file-upload" onclick="document.getElementById('addressProof').click()">
+                                    <input type="file" id="addressProof" name="documents" 
+                                           accept=".pdf,.jpg,.jpeg,.png" required>
+                                    <p>📎 Click to upload or drag and drop</p>
+                                    <p class="form-hint">Utility Bill / Bank Statement / Rent Agreement</p>
+                                </div>
+                                <div id="addressProofFile" class="file-list"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Passport Photo *</label>
+                                <div class="file-upload" onclick="document.getElementById('photo').click()">
+                                    <input type="file" id="photo" name="documents" 
+                                           accept=".jpg,.jpeg,.png" required>
+                                    <p>📎 Click to upload or drag and drop</p>
+                                    <p class="form-hint">Recent passport size photograph</p>
+                                </div>
+                                <div id="photoFile" class="file-list"></div>
+                            </div>
+
+                            <!-- Fee Information -->
+                            <div class="alert alert-info mt-3">
+                                <strong>Application Fee:</strong> 
+                                ₹<span th:text="${service.fee}">0</span>
+                                <br>
+                                <small>Processing time: <span th:text="${service.processingDays}">15</span> working days</small>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="form-group mt-3">
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" required>
+                                    <span>I declare that the information provided is true and correct</span>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                                Submit Application
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding-top: 0;">
+                    <p>&copy; 2024 Net Center. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Application Submitted!</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+                <p>Your application has been submitted successfully.</p>
+                <p class="mt-2"><strong>Application ID:</strong></p>
+                <p id="applicationIdDisplay" style="font-size: 1.5rem; color: var(--primary);"></p>
+                <p class="form-hint mt-2">Please save this ID for tracking your application.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/app.js}"></script>
+    <script>
+        // File upload handling
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const fileList = document.getElementById(this.id + 'File');
+                fileList.innerHTML = '';
+                Array.from(this.files).forEach(file => {
+                    const item = document.createElement('div');
+                    item.className = 'file-item';
+                    item.innerHTML = `
+                        <span>📄 ${file.name}</span>
+                        <span style="color: var(--text-secondary);">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    `;
+                    fileList.appendChild(item);
+                });
+            });
+        });
+
+        // Form submission
+        document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const serviceCode = document.getElementById('serviceCode').value;
+            
+            // Collect form data
+            const data = {};
+            const inputs = this.querySelectorAll('input:not([type="file"]):not([type="checkbox"]), select, textarea');
+            inputs.forEach(input => {
+                if (input.name) data[input.name] = input.value;
+            });
+            
+            formData.append('serviceCode', serviceCode);
+            formData.append('formData', JSON.stringify(data));
+            
+            // Add documents
+            const documentTypes = ['identity_proof', 'address_proof', 'photo'];
+            const fileInputs = ['identityProof', 'addressProof', 'photo'];
+            
+            fileInputs.forEach((id, index) => {
+                const input = document.getElementById(id);
+                if (input.files.length > 0) {
+                    formData.append('documents', input.files[0]);
+                    formData.append('documentTypes', documentTypes[index]);
+                }
+            });
+            
+            // Show loading
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/applications/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('applicationIdDisplay').textContent = result.data.applicationId;
+                    document.getElementById('successModal').classList.add('active');
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+            } finally {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

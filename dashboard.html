@@ -1,0 +1,90 @@
+<!-- src/main/resources/templates/admin/dashboard.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Net Center</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar" style="background: var(--primary); color: white;">
+            <div class="container">
+                <a href="/admin/dashboard" class="navbar-brand" style="color: white;">
+                    🏛️ Net Center Admin
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="/admin/dashboard" class="nav-link" style="color: rgba(255,255,255,0.9);">Dashboard</a></li>
+                    <li><a href="/admin/applications" class="nav-link" style="color: rgba(255,255,255,0.9);">Applications</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-sm" 
+                                    style="background: rgba(255,255,255,0.2); color: white;">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main style="padding: 2rem 0; flex: 1;">
+            <div class="container">
+                <h1 class="mb-3">Admin Dashboard</h1>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-4 mb-4">
+                    <div class="card stat-card">
+                        <div class="stat-value" th:text="${stats.total}">0</div>
+                        <div class="stat-label">Total Applications</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value" style="color: var(--warning);" 
+                             th:text="${stats.pending}">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value" style="color: var(--primary-light);" 
+                             th:text="${stats.underReview}">0</div>
+                        <div class="stat-label">Under Review</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value" style="color: var(--success);" 
+                             th:text="${stats.approved}">0</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-2">
+                    <a href="/admin/applications?status=PENDING" class="card p-3">
+                        <h3>📋 Process Pending Applications</h3>
+                        <p style="color: var(--text-secondary);">
+                            Review and process waiting applications
+                        </p>
+                    </a>
+                    <a href="/admin/applications" class="card p-3">
+                        <h3>📊 View All Applications</h3>
+                        <p style="color: var(--text-secondary);">
+                            Browse and search all applications
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding-top: 0;">
+                    <p>&copy; 2024 Net Center Admin Panel</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

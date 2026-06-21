@@ -1,0 +1,50 @@
+<!-- src/main/resources/templates/login.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Net Center</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper" style="justify-content: center; align-items: center; min-height: 100vh;">
+        <div class="card" style="max-width: 400px; width: 100%; margin: 2rem;">
+            <div class="card-header text-center">
+                <a href="/" class="navbar-brand" style="justify-content: center;">
+                    🏛️ Net Center
+                </a>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">Sign in to your account</p>
+            </div>
+            <div class="card-body">
+                <div th:if="${error}" class="alert alert-error">
+                    <span>Invalid email or password</span>
+                </div>
+                <div th:if="${message}" class="alert alert-success">
+                    <span th:text="${message}"></span>
+                </div>
+                
+                <form th:action="@{/login}" method="post">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="username" class="form-control" 
+                               placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" 
+                               placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Sign In
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p>Don't have an account? <a href="/register">Register here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

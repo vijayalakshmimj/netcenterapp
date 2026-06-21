@@ -1,0 +1,70 @@
+<!-- src/main/resources/templates/register.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="[thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Net Center</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="page-wrapper" style="justify-content: center; align-items: center; min-height: 100vh;">
+        <div class="card" style="max-width: 500px; width: 100%; margin: 2rem;">
+            <div class="card-header text-center">
+                <a href="/" class="navbar-brand" style="justify-content: center;">
+                    🏛️ Net Center
+                </a>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">Create your account</p>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/register}" method="post" th:object="${user}">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" th:field="*{fullName}" class="form-control" 
+                               th:classappend="${#fields.hasErrors('fullName')} ? 'error' : ''"
+                               placeholder="Enter your full name" required>
+                        <span class="form-error" th:if="${#fields.hasErrors('fullName')}" 
+                              th:errors="*{fullName}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" th:field="*{email}" class="form-control" 
+                               th:classappend="${#fields.hasErrors('email')} ? 'error' : ''"
+                               placeholder="Enter your email" required>
+                        <span class="form-error" th:if="${#fields.hasErrors('email')}" 
+                              th:errors="*{email}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" th:field="*{phone}" class="form-control" 
+                               th:classappend="${#fields.hasErrors('phone')} ? 'error' : ''"
+                               placeholder="10-digit mobile number">
+                        <span class="form-error" th:if="${#fields.hasErrors('phone')}" 
+                              th:errors="*{phone}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea th:field="*{address}" class="form-control" rows="3" 
+                                  placeholder="Enter your address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <input type="password" th:field="*{password}" class="form-control" 
+                               th:classappend="${#fields.hasErrors('password')} ? 'error' : ''"
+                               placeholder="Minimum 8 characters" required>
+                        <span class="form-error" th:if="${#fields.hasErrors('password')}" 
+                              th:errors="*{password}"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p>Already have an account? <a href="/login">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
